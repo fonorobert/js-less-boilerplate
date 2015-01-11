@@ -9,10 +9,6 @@
     "grunt-contrib-uglify": "*",
     "grunt-contrib-less": "*",
     "grunt-contrib-jshint": "*",
-    "jquery": "*"
-  },
-  "dependencies": {
-    "normalize.css": "~3.0.1",
     "grunt-lesslint": "~1.1.10"
   }
 }
