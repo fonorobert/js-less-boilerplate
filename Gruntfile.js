@@ -13,8 +13,8 @@ module.exports = function(grunt) {
 
 		concat: {
 			dev: {
-				src: ['node_modules/jquery/dist/jquery.min.js', 'src/js/*.js'], 
-				dest: 'js/main.js'
+				src: ['bower_components/jquery/dist/jquery.min.js', 'src/js/*.js'], 
+				dest: 'dist/js/main.js'
 			},
 			options: {
 				'banner': '/*! <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %> */',
@@ -29,7 +29,7 @@ module.exports = function(grunt) {
 					'banner': '/*! <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %> */'
 				},
 				files: {
-					'css/main.css': ['src/less/import.less', 'src/less/var.less', 'src/less/structure.less', 'src/less/type.less', 'src/less/sections.less']
+					'dist/css/main.css': ['src/less/import.less', 'src/less/var.less', 'src/less/structure.less', 'src/less/type.less', 'src/less/sections.less']
 				}
 			},
 			prod: {
@@ -38,7 +38,7 @@ module.exports = function(grunt) {
 					'cleancss': true
 				},
 				files: {
-					'css/main.min.css': ['src/less/import.less', 'src/less/var.less', 'src/less/structure.less', 'src/less/type.less', 'src/less/sections.less']
+					'dist/css/main.min.css': ['src/less/import.less', 'src/less/var.less', 'src/less/structure.less', 'src/less/type.less', 'src/less/sections.less']
 				}
 			}
 		},
@@ -50,7 +50,7 @@ module.exports = function(grunt) {
 			},
 			prod: {
 				files: {
-					'js/main.min.js': ['node_modules/jquery/dist/jquery.min.js', 'src/js/*.js']
+					'dist/js/main.min.js': ['bower_components/jquery/dist/jquery.min.js', 'src/js/*.js']
 				}
 			}
 		},
