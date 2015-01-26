@@ -12,9 +12,13 @@ module.exports = function(grunt) {
 		},
 
 		concat: {
+			dep: {
+				src: ['bower_components/jquery/dist/jquery.min.js'], 
+				dest: 'dev/js/dependencies.js'
+			},
 			dev: {
-				src: ['bower_components/jquery/dist/jquery.min.js', 'src/js/*.js'], 
-				dest: 'dist/js/main.js'
+				src: ['src/js/*.js'], 
+				dest: 'dev/js/main.js'
 			},
 			options: {
 				'banner': '/*! <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %> */',
@@ -26,19 +30,21 @@ module.exports = function(grunt) {
 			dev: {
 				options: {
 					'sourceMap': true,
+					'sourceMapFilename': 'dev/css/main.css.map',
+					'sourceMapURL': '/js-less-boilerplate/dev/css/main.css.map',
 					'banner': '/*! <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %> */'
 				},
 				files: {
-					'dist/css/main.css': ['src/less/import.less', 'src/less/var.less', 'src/less/structure.less', 'src/less/type.less', 'src/less/sections.less']
+					'dev/css/main.css': ['src/less/import.less']
 				}
 			},
-			prod: {
+			build: {
 				options: {
 					'banner': '/*! <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %> */',
-					'cleancss': true
+					'compress': true
 				},
 				files: {
-					'dist/css/main.min.css': ['src/less/import.less', 'src/less/var.less', 'src/less/structure.less', 'src/less/type.less', 'src/less/sections.less']
+					'build/css/main.min.css': ['src/less/import.less']
 				}
 			}
 		},
@@ -48,17 +54,46 @@ module.exports = function(grunt) {
 				'banner': '/*! <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %> */',
 				'mangle': false
 			},
-			prod: {
+			build: {
 				files: {
-					'dist/js/main.min.js': ['bower_components/jquery/dist/jquery.min.js', 'src/js/*.js']
+					'build/js/main.min.js': ['bower_components/jquery/dist/jquery.min.js', 'src/js/*.js']
 				}
 			}
+		},
+
+		 htmlrefs: {
+	      build: {
+	        /** @required  - string including grunt glob variables */
+	        src: './src/index.html',
+	        /** @optional  - string directory name*/
+	        dest: './build/index.html',
+	        options: {
+	          /** @optional  - references external files to be included */
+	          // includes: {
+	          //   analytics: './ga.inc' // in this case it's google analytics (see sample below)
+	          // },
+	          // /** any other parameter included on the options will be passed for template evaluation */
+	          // buildNumber: 47878
+	        }
+	      }
+    	},
+
+    	copy: {
+		  main: {
+		    files: [
+		      // includes files within path
+		      {expand: true, flatten: true, src: ['src/index.html'], dest: 'dev/', filter: 'isFile'},
+		    ],
+		  },
 		},
 		
 		watch: {
 			js: {
 				files: ['src/js/*.js'], 
-				tasks: ['jshint:dev', 'concat:dev']
+				tasks: ['jshint:dev', 'concat:dev'],
+				options: {
+			      livereload: true,
+			    }
 			},
 			gruntfile: {
 				files: ['Gruntfile.js'],
@@ -66,7 +101,17 @@ module.exports = function(grunt) {
 			},
 			less: {
 				files: ['src/less/*.less'],
-				tasks: ['lesslint', 'less:dev']
+				tasks: ['lesslint', 'less:dev'],
+				options: {
+			      livereload: true,
+			    }
+			},
+			html: {
+				files: ['src/index.html'],
+				tasks: ['copy'],
+				options: {
+			      livereload: true,
+			    }
 			}
 		}
 	});
@@ -77,7 +122,9 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-less');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-lesslint');
+	grunt.loadNpmTasks('grunt-htmlrefs');
+	grunt.loadNpmTasks('grunt-contrib-copy');
 
-	grunt.registerTask('default', ['jshint:dev', 'lesslint', 'concat:dev', 'less:dev']);
-	grunt.registerTask('prod', ['jshint:dev', 'uglify:dev', 'less:prod']);
+	grunt.registerTask('dev', ['jshint:dev', 'lesslint', 'concat:dep', 'concat:dev', 'less:dev', 'copy']);
+	grunt.registerTask('build', ['jshint:dev', 'uglify:build', 'less:build', 'htmlrefs:build']);
 };
