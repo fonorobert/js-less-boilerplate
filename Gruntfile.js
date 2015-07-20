@@ -1,7 +1,7 @@
 module.exports = function(grunt) {
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
-		
+
 		jshint: {
 			gruntfile: 'Gruntfile.js',
 			dev: 'src/js/*.js'
@@ -13,11 +13,11 @@ module.exports = function(grunt) {
 
 		concat: {
 			dep: {
-				src: ['bower_components/jquery/dist/jquery.min.js'], 
+				src: ['bower_components/jquery/dist/jquery.min.js'],
 				dest: 'dev/js/dependencies.js'
 			},
 			dev: {
-				src: ['src/js/*.js'], 
+				src: ['src/js/*.js'],
 				dest: 'dev/js/main.js'
 			},
 			options: {
@@ -61,20 +61,11 @@ module.exports = function(grunt) {
 			}
 		},
 
-		 htmlrefs: {
+		 processhtml: {
 	      build: {
-	        /** @required  - string including grunt glob variables */
-	        src: './src/index.html',
-	        /** @optional  - string directory name*/
-	        dest: './build/index.html',
-	        options: {
-	          /** @optional  - references external files to be included */
-	          // includes: {
-	          //   analytics: './ga.inc' // in this case it's google analytics (see sample below)
-	          // },
-	          // /** any other parameter included on the options will be passed for template evaluation */
-	          // buildNumber: 47878
-	        }
+	        files: {
+						'build/index.html': ['index.html']
+					}
 	      }
     	},
 
@@ -86,10 +77,10 @@ module.exports = function(grunt) {
 		    ],
 		  },
 		},
-		
+
 		watch: {
 			js: {
-				files: ['src/js/*.js'], 
+				files: ['src/js/*.js'],
 				tasks: ['jshint:dev', 'concat:dev'],
 				options: {
 			      livereload: true,
@@ -122,9 +113,9 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-less');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-lesslint');
-	grunt.loadNpmTasks('grunt-htmlrefs');
 	grunt.loadNpmTasks('grunt-contrib-copy');
+	grunt.loadNpmTasks('grunt-processhtml');
 
 	grunt.registerTask('dev', ['jshint:dev', 'lesslint', 'concat:dep', 'concat:dev', 'less:dev', 'copy']);
-	grunt.registerTask('build', ['jshint:dev', 'uglify:build', 'less:build', 'htmlrefs:build']);
+	grunt.registerTask('build', ['jshint:dev', 'uglify:build', 'less:build', 'processhtml:build']);
 };
